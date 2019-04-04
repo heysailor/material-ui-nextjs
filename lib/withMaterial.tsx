@@ -2,11 +2,14 @@ import React from 'react';
 import { AppComponentProps } from 'next/app';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import JssProvider from 'react-jss/lib/JssProvider';
 import initPageContext, { MaterialPageContext } from './initPageContext';
 
+// withMaterial wraps <App> in the Material UI Theme and Styles providers.
+
+// noStylesGeneration prop is optional - but handy if using eg apollo's getDataFromTree, where it can be passed in app props.
+// Setting to true speeds up processing as sheets are not made.
 export interface Props {
-  [key: string]: any;
+  noStylesGeneration?: boolean;
 }
 
 export interface MaterialAppComponentProps extends AppComponentProps {
@@ -24,10 +27,10 @@ export default (App: any) => {
     }
 
     render() {
-      const { apolloGetData } = this.props;
+      const { noStylesGeneration } = this.props;
       return (
         <ThemeProvider theme={this.pageContext.theme}>
-          <StylesProvider disableGeneration={apolloGetData}>
+          <StylesProvider disableGeneration={noStylesGeneration}>
             <CssBaseline />
             <App {...this.props} pageContext={this.pageContext} />
           </StylesProvider>

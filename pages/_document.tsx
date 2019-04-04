@@ -37,7 +37,12 @@ class MyDocument extends Document<any> {
     const page = renderPage(Component => {
       const WrappedComponent = (props: AnyPageProps) => {
         pageContext = props.pageContext as MaterialPageContext;
-        return pageContext.sheets.collect(<Component {...props} />) as any;
+        // pageContext may be undefined in case of error
+        return pageContext ? (
+          (pageContext.sheets.collect(<Component {...props} />) as any)
+        ) : (
+          <Component {...props} />
+        );
       };
 
       return WrappedComponent;
